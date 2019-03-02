@@ -1,27 +1,24 @@
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
-const session = require('express-session');
-const MongoDBStore = require('connect-mongodb-session')(session);
-const app = require('../app');
 const config = require('./index');
 
-const dbStore = new MongoDBStore({
-  uri: config.MONGODB_URI,
-  collection: config.COLLECTION,
-});
+const {
+  MONGODB_URI: uri,
+  MONGODB_DATABASE: database,
+  OPTIONS: options,
+} = config;
 
-app.use(session({
-  secret: config.SECRET,
-  cookie: {
-    maxAge: config.COOKIE_LIFE,
-  },
-  store: dbStore,
-  resave: true,
-  saveUninitialized: true,
-}));
+const secondaryOptions = {
+  useNewUrlParser: true, // recommended as a way to fall back to old parser, due to bug with new parser
+  reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
+  reconnectInterval: 500, // Reconnect every 500ms
+};
 
-dbStore.on('error', console.error.bind(console, 'db connection error'));
+mongoose.connect(`${uri}${database}?${options}`, secondaryOptions);
+const db = mongoose.connection;
 
-dbStore.once('open', () => {
-  console.log('Mongodb connection is open');
+db.on('error', console.error.bind(console, 'db connection error'));
+
+db.once('open', () => {
+  console.log('**********Mongodb connection is open**********');
 });

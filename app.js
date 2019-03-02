@@ -1,15 +1,40 @@
 const express = require('express');
-
-const app = express();
+const session = require('express-session');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const compression = require('compression');
+const MongoDBStore = require('connect-mongodb-session')(session);
+const chalk = require('chalk');
+const config = require('./config/index');
 
-module.exports = app;
+require('./config/database');
+
+const app = express();
 
 const compressionOptions = {
   threshold: '1mB',
 };
+
+const {
+  MONGODB_URI: uri,
+  MONGODB_DATABASE: database,
+  OPTIONS: options,
+} = config;
+
+const dbStore = new MongoDBStore({
+  uri: `${uri}${database}?${options}`,
+  collection: 'assessment_session',
+});
+
+app.use(session({
+  store: dbStore,
+  secret: config.SECRET,
+  cookie: {
+    maxAge: config.COOKIE_LIFE,
+  },
+  resave: true,
+  saveUninitialized: true,
+}));
 
 app
   .use(bodyParser.urlencoded({
@@ -27,14 +52,11 @@ app
     next();
   });
 
-
-const chalk = require('chalk');
 const router = require('./router');
 
 const port = process.env.PORT || 3000;
 
 router(app);
-
 // eslint-disable-line global-require
 app.listen(port, () => {
   console.log(chalk.cyanBright(`
