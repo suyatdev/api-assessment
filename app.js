@@ -1,4 +1,3 @@
-global.Promise = require('bluebird');
 const express = require('express');
 const session = require('express-session');
 const morgan = require('morgan');
@@ -25,6 +24,7 @@ const {
 const dbStore = new MongoDBStore({
   uri: `${uri}/${database}?${options}`,
   collection: 'assessment_session',
+  autoRemove: 'native',
 });
 
 app.use(session({
@@ -91,3 +91,5 @@ app.listen(port, () => {
   `));
   //* eslint-disable */
 });
+
+module.exports = app;

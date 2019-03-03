@@ -2,6 +2,11 @@ const usersRouter = require('./routes/user');
 const validationMiddleware = require('./middleware/validation');
 
 module.exports = function router(app) {
+  // for test use and checking over all server status
+  app.use('/test', (req, res) => {
+    res.status(200).send('Running fine!');
+  });
+
   // Admin
   app.use('/api/user', validationMiddleware, usersRouter);
 
