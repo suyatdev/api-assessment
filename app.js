@@ -22,7 +22,7 @@ const {
 } = config;
 
 const dbStore = new MongoDBStore({
-  uri: `${uri}${database}?${options}`,
+  uri: `${uri}/${database}?${options}`,
   collection: 'assessment_session',
 });
 

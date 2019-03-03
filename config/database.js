@@ -14,7 +14,7 @@ const secondaryOptions = {
   reconnectInterval: 500, // Reconnect every 500ms
 };
 
-mongoose.connect(`${uri}${database}?${options}`, secondaryOptions);
+mongoose.connect(`${uri}/${database}?${options}`, secondaryOptions);
 const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'db connection error'));
