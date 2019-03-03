@@ -1,9 +1,9 @@
 const usersRouter = require('./routes/user');
-const validation = require('./middleware/validation');
+const validationMiddleware = require('./middleware/validation');
 
 module.exports = function router(app) {
   // Admin
-  app.use('/api/user', validation, usersRouter);
+  app.use('/api/user', validationMiddleware, usersRouter);
 
   // Login
   app.use('/api/login', (req, res) => res.status(200).send('Login page'));

@@ -1,4 +1,7 @@
 # Dependency directories
 node_modules
 config/env/
+
+# Temporary Databse for testing #
 data
+

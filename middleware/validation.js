@@ -1,10 +1,10 @@
 const validator = require('validator');
 
 class ValidationError extends Error {
-  constructor(message) {
+  constructor({ message, status, code }) {
     super();
-    this.status = 422;
-    this.code = 422;
+    this.status = status || 400;
+    this.code = code || 400;
     this.message = `ERROR: ${message}`;
   }
 }
@@ -12,6 +12,8 @@ class InvalidEmailError extends ValidationError {
   constructor() {
     super();
     this.message = 'Email is invalid';
+    this.status = 422;
+    this.code = 422;
   }
 }
 
@@ -19,6 +21,8 @@ class PasswordMatchError extends ValidationError {
   constructor() {
     super();
     this.message = 'Password does not match';
+    this.status = 422;
+    this.code = 422;
   }
 }
 

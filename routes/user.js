@@ -1,7 +1,6 @@
 const UserRouter = (require('express')).Router();
-// const UserController = require('../controller/userController');
-const UserRepository = require('../repository/userRepository');
+const UserController = require('../controller/userController');
 
-UserRouter.route('/').post(UserRepository.create);
+UserRouter.route('/').post(UserController.createNewUser);
 
 module.exports = UserRouter;

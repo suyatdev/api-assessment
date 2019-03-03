@@ -1,15 +1,29 @@
 const UserRepository = require('../repository/userRepository');
 
 const userController = {
-  create(req, res, next) {
-    return UserRepository.create(req)
-      .then((body) => {
-        req.state = { body, payload: body };
-        return next();
-      })
-      .catch(err => next(err));
-  },
+  async createNewUser(req, res, next) {
+    try {
+      const isNewUser = await UserRepository.findExistingUser(req, res, next);
 
+      if (isNewUser.length >= 1) res.status(409).json({ message: 'Email is taken' });
+
+      const { user, token } = await UserRepository.create(req.body);
+
+      const response = {
+        message: 'Success',
+        success: true,
+        user,
+        token,
+      };
+
+      res.set('Content-Type', 'application/json');
+      res.status(200).json(response);
+
+      return next();
+    } catch (err) {
+      return next(err);
+    }
+  },
 };
 
-module.export = userController;
+module.exports = userController;
