@@ -1,5 +1,6 @@
 const usersRouter = require('./routes/user');
 const validationMiddleware = require('./middleware/validation');
+const userAuthMiddleWare = require('./middleware/userAuth');
 
 module.exports = function router(app) {
   // for test use and checking over all server status
@@ -14,5 +15,14 @@ module.exports = function router(app) {
   app.use('/api/login', (req, res) => res.status(200).send('Login page'));
 
   // Player
-  app.use('/api/players', (req, res) => res.status(200).send('Player list'));
+  // Authenticate user before any request on this route
+  app.use('/api/players/:id', userAuthMiddleWare, (req, res) => {
+    console.log('req.state', req.state);
+    console.log('req.body', req.body);
+    console.log('req.params', req.params.id);
+    console.log('req.query', req.query);
+
+
+    res.status(200).send({});
+  });
 };

@@ -1,9 +1,9 @@
 const requestPromise = require('request-promise');
 require('../bootsrap');
-
+const UserSchema = require('../../models/userModel');
 const config = require('../../config');
 
-describe('middleware/validationMiddleware', () => {
+describe('middleware/validation', () => {
   const baseRequestOption = {
     baseUrl: config.TARGET_URL,
     json: true,
@@ -25,6 +25,13 @@ describe('middleware/validationMiddleware', () => {
           done();
         });
     };
+  };
+
+  const cleanDB = () => (done) => {
+    UserSchema.remove({})
+      .then((res) => {
+        done();
+      });
   };
 
   const itBehavesLikeItReturnsStatusCode = (statusCode) => {
@@ -72,6 +79,9 @@ describe('middleware/validationMiddleware', () => {
       before(postUserRequest(user));
       itBehavesLikeItReturnsStatusCode([422]);
       itBehavesLikeItReturnsAnMismatchPasswordMessage();
+    });
+    after(async function () {
+      return cleanDB();
     });
   });
 });

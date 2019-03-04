@@ -24,6 +24,13 @@ describe('Integration tests for User', () => {
     };
   };
 
+  const cleanDB = email => (done) => {
+    UserSchema.remove({ email })
+      .then((res) => {
+        done();
+      });
+  };
+
   const itBehavesLikeItReturnsStatusCode = (statusCode) => {
     it(`returns status code ${statusCode}`, () => {
       expect(this.response.statusCode).to.be.oneOf(statusCode);
@@ -64,6 +71,7 @@ describe('Integration tests for User', () => {
       itBehavesLikeItReturnsASuccessField(true);
       itBehavesLikeItReturnsTheUserObject();
       itBehavesLikeItReturnsAToken();
+      after(cleanDB(user.email));
     });
   });
 });

@@ -3,9 +3,9 @@ const UserRepository = require('../repository/userRepository');
 const userController = {
   async createNewUser(req, res, next) {
     try {
-      const isNewUser = await UserRepository.findExistingUser(req, res, next);
+      const existingUser = await UserRepository.findExistingUser(req, res, next);
 
-      if (isNewUser.length >= 1) res.status(409).json({ message: 'Email is taken' });
+      if (existingUser) return res.status(409).json({ message: 'Email is taken' });
 
       const { user, token } = await UserRepository.create(req.body);
 
@@ -21,7 +21,7 @@ const userController = {
 
       return next();
     } catch (err) {
-      return next(err);
+      return err;
     }
   },
 };

@@ -14,10 +14,10 @@ const validation = (req, res, next) => {
   const isEmailValid = validator.isEmail(req.body.email);
 
   if (!matchingPassword) {
-    return res.status(422).send(new InvalidError('Password does not match'));
+    throw new InvalidError('Password does not match');
   }
   if (!isEmailValid) {
-    return res.status(422).send(new InvalidError('Email is invalid'));
+    throw new InvalidError('Email is invalid');
   }
 
   next();
