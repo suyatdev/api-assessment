@@ -1,8 +1,10 @@
 const validator = require('validator');
 
-class ErrorMessage extends Error {
+class InvalidError extends Error {
   constructor(message) {
     super();
+    this.status = 422;
+    this.code = 422;
     this.message = message;
   }
 }
@@ -11,8 +13,12 @@ const validation = (req, res, next) => {
   const matchingPassword = req.body.password === req.body.confirm_password;
   const isEmailValid = validator.isEmail(req.body.email);
 
-  if (!matchingPassword) throw new ErrorMessage('Password does not match');
-  if (!isEmailValid) throw new ErrorMessage('Email is invalid');
+  if (!matchingPassword) {
+    return res.status(422).send(new InvalidError('Password does not match'));
+  }
+  if (!isEmailValid) {
+    return res.status(422).send(new InvalidError('Email is invalid'));
+  }
 
   next();
 };

@@ -7,11 +7,11 @@ const config = require('../config/index');
 const userRepository = {
   create(body = {}) {
     const {
-      password,
+      password: userPassword,
     } = body;
-    const hashedPassword = bcrypt.hashSync(password, 10, (err, hash) => {
+    const hashedPassword = bcrypt.hashSync(userPassword, 10, (err, hash) => {
       if (err) {
-        console.log('Hash error', err);
+        console.log('Password Hash error', err);
       } else {
         return hash;
       }
@@ -24,8 +24,8 @@ const userRepository = {
     })
       .save()
       .then((user) => {
-        const { email, _id } = user;
-        const token = jwt.sign({ email, _id }, config.SECRET, { expiresIn: `${config.TOKEN_LIFE}` });
+        const { email, password } = user;
+        const token = jwt.sign({ email, password }, config.SECRET, { expiresIn: `${config.TOKEN_LIFE}` });
 
         return { user, token };
       });

@@ -1,9 +1,6 @@
-const _ = require('lodash');
 const requestPromise = require('request-promise');
-const chai = require('chai');
 const UserSchema = require('../../models/userModel');
 
-const { expect } = chai;
 const config = require('../../config');
 
 describe('Integration tests for User', () => {
@@ -34,7 +31,7 @@ describe('Integration tests for User', () => {
   };
 
   const itBehavesLikeItReturnsASuccessField = () => {
-    it('returns a success a field', () => {
+    it('returns a success field that is a boolean', () => {
       expect(this.response.body).to.have.property('success')
         .that.satisfy(success => expect(success).to.be.an('boolean'));
     });

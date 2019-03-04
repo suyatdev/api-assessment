@@ -16,7 +16,6 @@ const userController = {
         token,
       };
 
-      console.log('NEW USER CREATED', response);
       res.set('Content-Type', 'application/json');
       res.status(200).json(response);
 
