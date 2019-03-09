@@ -11,7 +11,7 @@ const userRepository = {
     } = body;
     const hashedPassword = bcrypt.hashSync(userPassword, config.SALT_ROUNDS, (err, hash) => {
       if (err) {
-        console.log('Password Hash error', err);
+        throw new Error(err);
       }
 
       return hash;
@@ -26,11 +26,11 @@ const userRepository = {
       .then(user => tokenManager.createToken(user));
   },
 
-  async findExistingUser(req, res, next) {
+  async findExistingUser(req) {
     try {
       return await UserModel.findOne({ email: req.body.email });
     } catch (err) {
-      return next(err);
+      throw new Error(err);
     }
   },
 };

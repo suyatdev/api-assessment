@@ -8,7 +8,7 @@ describe('Integration tests for User', () => {
     baseUrl: config.TARGET_URL,
     json: true,
   };
-  const postUserRequest = (data) => {// eslint-disable-line
+  const createUserRequest = (data) => {// eslint-disable-line
     return (done) => {
       requestPromise({
         ...baseRequestOption,
@@ -17,15 +17,15 @@ describe('Integration tests for User', () => {
         body: data,
       },
       (error, response) => {
-        this.response = response;
         this.error = error;
+        this.response = response;
         done();
       });
     };
   };
 
   const cleanDB = email => (done) => {
-    UserSchema.remove({ email })
+    UserSchema.deleteOne({ email })
       .then((res) => {
         done();
       });
@@ -66,7 +66,7 @@ describe('Integration tests for User', () => {
         password: 'abc123',
         confirm_password: 'abc123',
       };
-      before(postUserRequest(user));
+      before(createUserRequest(user));
       itBehavesLikeItReturnsStatusCode([200]);
       itBehavesLikeItReturnsASuccessField(true);
       itBehavesLikeItReturnsTheUserObject();
