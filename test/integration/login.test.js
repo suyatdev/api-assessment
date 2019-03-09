@@ -3,19 +3,38 @@ const UserSchema = require('../../models/userModel');
 
 const config = require('../../config');
 
-describe('Integration tests for User', () => {
+describe('Integration tests for /login', () => {
   const baseRequestOption = {
     baseUrl: config.TARGET_URL,
     json: true,
   };
-
-  this.response = {};
   const createUserRequest = (data) => {// eslint-disable-line
     return (done) => {
       requestPromise({
         ...baseRequestOption,
         method: 'POST',
         uri: '/user',
+        body: data,
+      },
+      (err, res) => {
+        this.response = res;
+        if (err) {
+          throw err;
+        }
+        done();
+      })
+        .catch((err) => {
+          this.error = err;
+        });
+    };
+  };
+
+  const loginRequest = (data) => {// eslint-disable-line
+    return (done) => {
+      requestPromise({
+        ...baseRequestOption,
+        method: 'POST',
+        uri: '/login',
         body: data,
       },
       (err, res) => {
@@ -50,9 +69,9 @@ describe('Integration tests for User', () => {
     });
   };
 
-  const itBehavesLikeItReturnsAnEmailErrorMessage = () => {
-    it('returns an mismatched password message', () => {
-      expect(this.error.error.error.message).to.equal('Email is taken');
+  const itBehavesLikeItReturnsAnUnauthorizedErrorMessage = () => {
+    it('returns an unauthorized error message', () => {
+      expect(this.error.error.error.message).to.equal('UNAUTHORIZED: Unable to authenticate user');
     });
   };
 
@@ -76,34 +95,47 @@ describe('Integration tests for User', () => {
     });
   };
 
-  describe('POST /user', () => {
-    context('POST new user that returns user object and token', () => {
+  describe('POST /login Success', () => {
+    before('create user request', createUserRequest({
+      first_name: 'Mark',
+      last_name: 'Suyat',
+      email: 'marksuyat@email.com',
+      password: 'abc123',
+      confirm_password: 'abc123',
+    }));
+    context('POST an existing user that returns user object and token', () => {
       const user = {
-        first_name: 'Mark',
-        last_name: 'Suyat',
         email: 'marksuyat@email.com',
         password: 'abc123',
-        confirm_password: 'abc123',
       };
-      before('create user request', createUserRequest(user));
+      before('create user request', loginRequest(user));
       itBehavesLikeItReturnsStatusCode([200]);
       itBehavesLikeItReturnsASuccessField(true);
       itBehavesLikeItReturnsTheUserObject();
       itBehavesLikeItReturnsAToken();
     });
+  });
 
-    context('Get an error if email is already taken', () => {
-      const user = {
-        first_name: 'Mark',
-        last_name: 'Suyat',
+  describe('POST /login Error', () => {
+    context('Get an error when email is invalid', () => {
+      const invalidUser = {
+        email: 'invalid_email@email.com',
+        password: 'wrong_password',
+      };
+      before(loginRequest(invalidUser));
+      itBehavesLikeItReturnsStatusCodeError([401]);
+      itBehavesLikeItReturnsAnUnauthorizedErrorMessage();
+    });
+
+    context('Get an error when password is invalid', () => {
+      const invalidUser = {
         email: 'marksuyat@email.com',
         password: 'abc123',
-        confirm_password: 'abc123',
       };
-      before('create user request', createUserRequest(user));
-      itBehavesLikeItReturnsStatusCodeError([422]);
-      itBehavesLikeItReturnsAnEmailErrorMessage();
-      after(cleanDB(user.email));
+      before(loginRequest(invalidUser));
+      itBehavesLikeItReturnsStatusCodeError([401]);
+      itBehavesLikeItReturnsAnUnauthorizedErrorMessage();
     });
+    after(cleanDB('marksuyat@email.com'));
   });
 });

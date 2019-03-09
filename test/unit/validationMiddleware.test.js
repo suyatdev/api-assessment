@@ -15,14 +15,13 @@ describe('middleware/validation', () => {
         method: 'POST',
         uri: 'user',
         body: data,
+      },
+      (err, res) => {
+        this.response = res;
+        done();
       })
-        .then((response) => {
-          this.response = response;
-          done();
-        })
-        .catch((error) => {
-          this.error = error.response;
-          done();
+        .catch((err) => {
+          this.error = err;
         });
     };
   };
@@ -36,19 +35,19 @@ describe('middleware/validation', () => {
 
   const itBehavesLikeItReturnsStatusCode = (statusCode) => {
     it(`returns status code ${statusCode}`, () => {
-      expect(this.error.body.status).to.be.oneOf(statusCode);
+      expect(this.response.statusCode).to.be.oneOf(statusCode);
     });
   };
 
   const itBehavesLikeItReturnsAnInvalidEmailMessage = () => {
     it('returns an in valid email message', () => {
-      expect(this.error.body.message).to.equal('Email is invalid');
+      expect(this.error.error.error.message).to.equal('Email is invalid');
     });
   };
 
   const itBehavesLikeItReturnsAnMismatchPasswordMessage = () => {
     it('returns an mismatched password message', () => {
-      expect(this.error.body.message).to.equal('Password does not match');
+      expect(this.error.error.error.message).to.equal('Password does not match');
     });
   };
 

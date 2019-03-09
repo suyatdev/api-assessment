@@ -1,8 +1,8 @@
 const requestPromise = require('request-promise');
 require('../bootsrap');
-const UserSchema = require('../../models/userModel');
-// const tokenManager = require('../../middleware/userAuth');
+const tokenManager = require('../../util/tokenManager');
 
+const sandbox = sinon.createSandbox();
 const config = require('../../config');
 
 describe('middleware/userAuth', () => {
@@ -16,54 +16,26 @@ describe('middleware/userAuth', () => {
   const baseRequestOption = {
     baseUrl: config.TARGET_URL,
     json: true,
-    body: user,
   };
-  const createUser = (options) => {// eslint-disable-line
+  const postPlayers = (options) => {// eslint-disable-line
     return (done) => {
       requestPromise({
         ...baseRequestOption,
         ...options,
+      },
+      (err, res) => {
+        this.response = res;
+        if (err) {
+          throw err;
+        }
+        done();
       })
-        .then((response) => {
-          console.log('AUTH response', response);
-
-          this.response = response;
-          done();
-        })
-        .catch((error) => {
-          console.log('AUTH error', error);
-
-          this.error = error.response;
-          done();
-        });
-    };
-  };
-  const postPlayers = (data) => {// eslint-disable-line
-    return (done) => {
-      requestPromise({
-        ...baseRequestOption,
-        method: 'POST',
-        uri: 'players',
-      })
-        .then((response) => {
-          this.response = response;
-          done();
-        })
-        .catch((error) => {
-          // console.log('ERROR>>>>>', error) // eslint-disable-line
-          this.error = error;
-          done();
+        .catch((err) => {
+          this.error = err;
         });
     };
   };
 
-  const cleanDB = () => done => UserSchema.remove({})
-    .then((result) => {
-      done();
-    })
-    .catch(err => err);
-
-  afterEach(() => cleanDB(user.email));
 
   const itBehavesLikeItReturnsStatusCode = (statusCode) => {
     it(`returns status code ${statusCode}`, () => {
@@ -71,15 +43,15 @@ describe('middleware/userAuth', () => {
     });
   };
 
-  const itBehavesLikeItReturnsAnError = () => {
-    it('returns an error', () => {
-      expect(this.error).to.be.an('error');
+  const itBehavesLikeItReturnsAnUnauthorizedErrorMessage = () => {
+    it('returns an `Unable to authenticate` message', () => {
+      expect(this.error.error.error.message).to.equal('UNAUTHORIZED: Unable to authenticate user');
     });
   };
 
-  const itBehavesLikeItReturnsAnUnauthorizedErrorMessage = () => {
-    it('returns an `Unable to authenticate` message', () => {
-      expect(this.error.error).to.equal('UNAUTHORIZED: Unable to authenticate user');
+  const itBehavesLikeItReturnsAMissingHeaderErrorMessage = () => {
+    it('returns a `Token header not found on request` message', () => {
+      expect(this.error.error.error.message).to.equal('UNAUTHORIZED: Token header not found on request');
     });
   };
 
@@ -87,38 +59,29 @@ describe('middleware/userAuth', () => {
     context('Throws an error if missing a header ', () => {
       const options = {
         method: 'POST',
-        uri: 'user',
+        uri: '/players',
       };
-      before(createUser(options));
       before(postPlayers(options));
       itBehavesLikeItReturnsStatusCode([401]);
+      itBehavesLikeItReturnsAMissingHeaderErrorMessage();
     });
 
-    // context('Throws an error if user is not authenticated ', () => {
-    //   const token = 'ehdubGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hcmtzdXlhdEBtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJG9QR2tHOUVtTHdST0JmZGJkeS9VZWVQU0RiMlh3MWZMQ0N5Tlo3SW9nbGtYdlBYZndUaG9HIiwiaWF0IjoxNTUxNzU2MjIzLCJleHAiOjE1NTE4NDI2MjN9.L5Af3GJOuFjF_HptgUHMp8LabfTMYoqMiktisAXQbBk';
-    //   const options = {
-    //     method: 'POST',
-    //     uri: 'user',
-    //     header: { Authorization: `Bearer ${token}` },
-    //   };
-    //   before(postPlayers(options));
-    //   itBehavesLikeItReturnsStatusCode([401]);
-    //   itBehavesLikeItReturnsAnUnauthorizedErrorMessage();
-    // });
-
-    // context('Returns matching user ', () => {
-    //   const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hcmtzdXlhdEBtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJG9QR2tHOUVtTHdST0JmZGJkeS9VZWVQU0RiMlh3MWZMQ0N5Tlo3SW9nbGtYdlBYZndUaG9HIiwiaWF0IjoxNTUxNzU2MjIzLCJleHAiOjE1NTE4NDI2MjN9.L5Af3GJOuFjF_HptgUHMp8LabfTMYoqMiktisAXQbBk';
-    //   const options = {
-    //     method: 'POST',
-    //     uri: 'player',
-    //     header: {
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //   };
-    //   before(createUser(options));
-    //   before(postPlayers(options));
-    //   itBehavesLikeItReturnsAnError();
-    //   itBehavesLikeItReturnsStatusCode([401]);
-    // });
+    context('Throws an error if user is not authenticated ', () => {
+      const createTokenSpy = sandbox.spy(tokenManager, 'createToken');
+      const { token } = createTokenSpy(user);
+      const options = {
+        method: 'POST',
+        uri: '/players',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      before(postPlayers(options));
+      itBehavesLikeItReturnsStatusCode([401]);
+      itBehavesLikeItReturnsAnUnauthorizedErrorMessage();
+      after(() => {
+        sandbox.restore();
+      });
+    });
   });
 });
