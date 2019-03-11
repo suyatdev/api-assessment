@@ -73,7 +73,7 @@ describe('middleware/userAuth', () => {
         method: 'POST',
         uri: '/players',
         headers: {
-          Authorization: `Bearer ${token}`,
+          authorization: `Bearer ${token}`,
         },
       };
       before(postPlayers(options));

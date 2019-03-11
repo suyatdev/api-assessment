@@ -1,29 +1,25 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 const UserModel = require('../models/userModel');
-const config = require('../config/index');
+
 const tokenManager = require('../util/tokenManager');
 
 const userRepository = {
-  create(body = {}) {
-    const {
-      password: userPassword,
-    } = body;
-    const hashedPassword = bcrypt.hashSync(userPassword, config.SALT_ROUNDS, (err, hash) => {
-      if (err) {
-        throw new Error(err);
-      }
+  async create({ body, hashedPassword }) {
+    try {
+      const { email, first_name, last_name } = body; // eslint-disable-line
+      const newUser = await new UserModel({
+        email,
+        first_name,
+        last_name,
+        password: hashedPassword,
+        _id: mongoose.Types.ObjectId(),
+      })
+        .save();
 
-      return hash;
-    });
-
-    return new UserModel({
-      ...body,
-      password: hashedPassword,
-      _id: mongoose.Types.ObjectId(),
-    })
-      .save()
-      .then(user => tokenManager.createToken(user));
+      return await tokenManager.createToken(newUser);
+    } catch (err) {
+      return err;
+    }
   },
 
   async findExistingUser(req) {

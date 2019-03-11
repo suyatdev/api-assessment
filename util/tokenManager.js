@@ -1,7 +1,8 @@
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-
+const UserSchema = require('../models/userModel');
+const { AuthenticationError } = require('../errors/customErrors');
 
 module.exports = {
   decodeToken(credentials, res) {
@@ -22,4 +23,38 @@ module.exports = {
   getHeaderToken(authorizationHeader) {
     return _.last(authorizationHeader.split(' '));
   },
+  async verifyUser({
+    password,
+    email,
+  }) {
+    try {
+      return await UserSchema.findOne({
+        $and: [{
+          email,
+        }, {
+          password,
+        }],
+      });
+    } catch (error) {
+      return error;
+    }
+  },
+  verifyToken(request, res) {
+    const {
+      headers: {
+        authorization: authorizationHeader,
+      },
+    } = request;
+    if (!authorizationHeader) {
+      throw new AuthenticationError('Token header not found on request');
+    }
+
+    const tokenData = this.decodeToken(this.getHeaderToken(authorizationHeader), res);
+
+    return Promise.resolve(this.verifyUser(tokenData))
+      .catch((err) => {
+        throw new AuthenticationError(err);
+      });
+  },
+
 };

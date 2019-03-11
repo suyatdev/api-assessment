@@ -24,3 +24,4 @@ describe('Check if server is running', function () {
 
 require('./user.test.js');
 require('./login.test.js');
+require('./players.test.js');

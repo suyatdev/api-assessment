@@ -1,7 +1,7 @@
 const validator = require('validator');
 const { ValidationError } = require('../errors/customErrors');
 
-const validation = (req, res, next) => {
+module.exports = (req, res, next) => {
   const matchingPassword = req.body.password === req.body.confirm_password;
   const isEmailValid = validator.isEmail(req.body.email);
 
@@ -14,5 +14,3 @@ const validation = (req, res, next) => {
 
   next();
 };
-
-module.exports = validation;
