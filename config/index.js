@@ -1,7 +1,7 @@
+const develop = require('./env/develop');
 const local = require('./env/local');
-const test = require('./env/test');
 
 module.exports = {
+  develop,
   local,
-  test,
 }[process.env.NODE_ENV];

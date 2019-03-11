@@ -8,8 +8,6 @@ const config = require('../../config');
 
 describe('Integration tests for /players', () => {
   const createTokenSpy = sandbox.spy(tokenManager, 'createToken');
-  const playersList = null;
-
   const user = {
     first_name: 'Mark',
     last_name: 'Suyat',
