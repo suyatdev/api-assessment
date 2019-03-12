@@ -1,6 +1,6 @@
 # Dependency directories
 node_modules
-config/env/
+# config/env/   really should not be pushed into the repo
 
 # Temporary Databse for testing #
 data
