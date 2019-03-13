@@ -23,6 +23,9 @@ app
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('X-Frame-Options', 'sameorigin');
     // res.setHeader('Content-Security-Policy', 'default-src \'self\'');
     next();
   });
