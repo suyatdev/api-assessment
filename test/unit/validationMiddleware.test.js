@@ -8,7 +8,7 @@ describe('middleware/validation', () => {
     baseUrl: config.TARGET_URL,
     json: true,
   };
-  const postUserRequest = (data) => {// eslint-disable-line
+  const postUserRequest = (data) => {
     return (done) => {
       requestPromise({
         ...baseRequestOption,
@@ -28,7 +28,7 @@ describe('middleware/validation', () => {
 
   const cleanDB = () => (done) => {
     UserSchema.remove({})
-      .then((res) => {
+      .then(() => {
         done();
       });
   };

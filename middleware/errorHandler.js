@@ -10,7 +10,7 @@ const parseError = (error) => {
   return createErrorJSON(error.status || 500, error.message || 'Internal server error');
 };
 
-module.exports = (err, req, res, next) => { // eslint-disable-line no-unused-vars
+module.exports = (err, req, res, next) => {
   const parsedError = parseError(err);
   return res.status(parsedError.code).send({ error: parsedError });
 };

@@ -10,7 +10,7 @@ describe('Integration tests for User', () => {
   };
 
   this.response = {};
-  const createUserRequest = (data) => {// eslint-disable-line
+  const createUserRequest = (data) => {
     return (done) => {
       requestPromise({
         ...baseRequestOption,
@@ -33,7 +33,7 @@ describe('Integration tests for User', () => {
 
   const cleanDB = email => (done) => {
     UserSchema.deleteOne({ email })
-      .then((res) => {
+      .then(() => {
         done();
       });
   };

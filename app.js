@@ -26,7 +26,7 @@ app
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-XSS-Protection', '1; mode=block');
     res.setHeader('X-Frame-Options', 'sameorigin');
-    // res.setHeader('Content-Security-Policy', 'default-src \'self\'');
+    res.setHeader('Content-Security-Policy', 'default-src \'self\'');
     next();
   });
 
@@ -35,7 +35,7 @@ const router = require('./router');
 const port = process.env.PORT || 3000;
 
 router(app);
-// eslint-disable-line global-require
+
 app.listen(port, () => {
   console.log(chalk.cyanBright(`
        ███████╗██████╗██████╗██████╗██████╗██████╗██████╗██████╗██████╗██████╗
@@ -65,7 +65,6 @@ app.listen(port, () => {
        ███████╗███████╗███████╗███████╗███████╗███████╗███████╗███████╗██████╗
        ╚══════╝╚══════╝╚══════╝╚══════╝╚══════╝╚══════╝╚══════╝╚══════╝╚═════╝
                           PORT: ${port} MODE: ${process.env.NODE_ENV}`));
-  //* eslint-disable */
 });
 
 module.exports = app;

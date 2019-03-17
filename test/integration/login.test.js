@@ -8,7 +8,7 @@ describe('Integration tests for /login', () => {
     baseUrl: config.TARGET_URL,
     json: true,
   };
-  const createUserRequest = (data) => {// eslint-disable-line
+  const createUserRequest = (data) => {
     return (done) => {
       requestPromise({
         ...baseRequestOption,
@@ -29,7 +29,7 @@ describe('Integration tests for /login', () => {
     };
   };
 
-  const loginRequest = (data) => {// eslint-disable-line
+  const loginRequest = (data) => {
     return (done) => {
       requestPromise({
         ...baseRequestOption,
@@ -52,7 +52,7 @@ describe('Integration tests for /login', () => {
 
   const cleanDB = email => (done) => {
     UserSchema.deleteOne({ email })
-      .then((res) => {
+      .then(() => {
         done();
       });
   };

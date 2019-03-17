@@ -2,7 +2,9 @@
   "extends": "airbnb-base",
   "rules": {
     "max-len": ["error", 120, { "ignoreStrings": true }],
+		"no-underscore-dangle": 0,
+		"no-unused-vars": ["error", {"args": "none"}],
     "quotes": [ "error","single" ],
-    "semi": [ "error","always" ]
+		"semi": [ "error","always" ]
   }
 }

@@ -26,8 +26,7 @@ describe('Integration tests for /players', () => {
       uri: '/user',
       body: user,
     },
-    (err, res) => {
-    })
+    () => {})
       .catch(err => err);
   };
 
