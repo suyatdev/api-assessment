@@ -1,6 +1,6 @@
 require('../bootsrap');
-const tokenManager = require('../../util/tokenManager');
-const userAuthMiddeware = require('../../middleware/userAuth');
+const tokenManager = require('../../src/util/tokenManager');
+const userAuthMiddeware = require('../../src/middleware/userAuth');
 
 const sandbox = sinon.createSandbox();
 

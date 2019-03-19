@@ -1,9 +1,9 @@
 const requestPromise = require('request-promise');
 require('../bootsrap');
-const tokenManager = require('../../util/tokenManager');
+const tokenManager = require('../../src/util/tokenManager');
 
 const sandbox = sinon.createSandbox();
-const config = require('../../config');
+const config = require('../../src/config');
 
 describe('middleware/userAuth', () => {
   const user = {

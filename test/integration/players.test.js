@@ -1,10 +1,10 @@
 const requestPromise = require('request-promise');
-const PlayerModel = require('../../models/playerModel');
-const UserModel = require('../../models/userModel');
-const tokenManager = require('../../util/tokenManager');
+const PlayerModel = require('../../src/models/playerModel');
+const UserModel = require('../../src/models/userModel');
+const tokenManager = require('../../src/util/tokenManager');
 
 const sandbox = sinon.createSandbox();
-const config = require('../../config');
+const config = require('../../src/config');
 
 describe('Integration tests for /players', () => {
   const createTokenSpy = sandbox.spy(tokenManager, 'createToken');

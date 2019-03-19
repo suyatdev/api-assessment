@@ -1,7 +1,7 @@
 const requestPromise = require('request-promise');
-const UserSchema = require('../../models/userModel');
+const UserSchema = require('../../src/models/userModel');
 
-const config = require('../../config');
+const config = require('../../src/config');
 
 describe('Integration tests for /login', () => {
   const baseRequestOption = {

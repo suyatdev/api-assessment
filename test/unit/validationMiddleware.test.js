@@ -1,7 +1,7 @@
 const requestPromise = require('request-promise');
 require('../bootsrap');
-const UserSchema = require('../../models/userModel');
-const config = require('../../config');
+const UserSchema = require('../../src/models/userModel');
+const config = require('../../src/config');
 
 describe('middleware/validation', () => {
   const baseRequestOption = {

@@ -1,5 +1,5 @@
 const tokenManager = require('../util/tokenManager');
-const { AuthenticationError } = require('../errors/customErrors');
+const { AuthenticationError } = require('../util/customErrorHandling');
 
 module.exports = (req, res, next) => tokenManager.verifyToken(req, res)
   .then((user) => {

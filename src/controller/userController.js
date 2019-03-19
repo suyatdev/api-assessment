@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const UserRepository = require('../repository/userRepository');
-const { EmailError, AuthenticationError } = require('../errors/customErrors');
+const { EmailError, AuthenticationError } = require('../util/customErrorHandling');
 const config = require('../config/index');
 const { createToken } = require('../util/tokenManager');
 

@@ -1,5 +1,5 @@
 const superTest = require('supertest');
-const app = require('../../app');
+const app = require('../../src/app');
 
 require('../bootsrap');
 

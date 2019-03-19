@@ -1,5 +1,5 @@
 const validator = require('validator');
-const { ValidationError } = require('../errors/customErrors');
+const { ValidationError } = require('../util/customErrorHandling');
 
 module.exports = (req, res, next) => {
   const matchingPassword = req.body.password === req.body.confirm_password;

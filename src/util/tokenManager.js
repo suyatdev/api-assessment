@@ -2,7 +2,7 @@ const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const UserSchema = require('../models/userModel');
-const { AuthenticationError } = require('../errors/customErrors');
+const { AuthenticationError } = require('./customErrorHandling');
 
 module.exports = {
   decodeToken(credentials, res) {

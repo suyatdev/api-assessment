@@ -1,5 +1,5 @@
 const PlayerRepository = require('../repository/playerRepository');
-const { NotFoundError } = require('../errors/customErrors');
+const { NotFoundError } = require('../util/customErrorHandling');
 
 module.exports = {
 

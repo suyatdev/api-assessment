@@ -5,12 +5,12 @@
 	"main": "app.js",
 	"scripts": {
 		"eslint": "eslint . --ext .js",
-		"develop": "cross-env NODE_ENV=develop PORT=3000 nodemon ./app.js",
+		"develop": "cross-env NODE_ENV=develop PORT=3000 nodemon ./src/app.js",
 		"prelocal": "mkdir -p data/db && mongod --dbpath data/db --fork --logpath /dev/null",
 		"mocha:integration": "cross-env NODE_ENV=local PORT=8080 mocha test/integration/integrationTest.js --exit",
 		"mocha:unit": "cross-env NODE_ENV=local PORT=8080 mocha \"test/unit/**/*.test.js\"",
 		"test": "npm run mocha:unit && npm run mocha:integration",
-		"local": "cross-env NODE_ENV=local PORT=3000 nodemon ./app.js",
+		"local": "cross-env NODE_ENV=local PORT=3000 nodemon ./src/app.js",
 		"postlocal": "mongo admin --eval 'db.shutdownServer()' > /dev/null && rm -rf data"
 	},
 	"author": "Mark Suyat",
