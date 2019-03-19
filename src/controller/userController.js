@@ -15,6 +15,9 @@ const comparePassword = (password, hash) => bcrypt.compare(password, hash).then(
 
 const checkExistingUser = req => UserRepository.findExistingUser(req);
 
+/**
+ * Manages the responses and request for users
+ */
 module.exports = {
 
   async createNewUser(req, res, next) {

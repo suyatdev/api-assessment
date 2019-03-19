@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const PlayerModel = require('../models/playerModel');
 
+/**
+ * Interface with Playermodel
+ *
+ */
 module.exports = {
   async createPlayer({ user, body }) {
     try {

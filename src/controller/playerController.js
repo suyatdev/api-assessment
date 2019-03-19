@@ -1,6 +1,10 @@
 const PlayerRepository = require('../repository/playerRepository');
 const { NotFoundError } = require('../util/customErrorHandling');
 
+/**
+ * Manages the responses and request for players
+ *
+ */
 module.exports = {
 
   async createPlayer(req, res, next) {

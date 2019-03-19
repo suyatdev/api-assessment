@@ -3,6 +3,10 @@ const UserModel = require('../models/userModel');
 
 const tokenManager = require('../util/tokenManager');
 
+/**
+ * Interface with UserModel
+ *
+ */
 const userRepository = {
   async create({ body, hashedPassword }) {
     try {

@@ -1,3 +1,8 @@
+
+/**
+ * Custom generated error messages
+ *
+ */
 class EmailError extends Error {
   constructor(message) {
     super();
