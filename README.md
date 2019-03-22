@@ -52,7 +52,7 @@
 > > │   ├── /repository/            # Interface with the models and create a buffer
 > > │   ├── /routes/                # Handles each routes
 > > │   ├── /util                   # Functions used for validation, authentication and error handling
-> > │   ├── /app.js                 # Client utility for sending transactional email
+> > │   ├── /app.js                 # Express.js application
 > > │   ├── /router.js              # Routes each endpoint
 > > ├── /test/                      # Testing
 > > ├── package.json                # Project dependencies
